@@ -1,0 +1,30 @@
+{
+    "name": "hexlet/code",
+    "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MoiseenkoVA",
+            "email": "mvaload@gmail.com"
+        }
+    ],
+    "bin": [
+        "bin/page-loader"
+    ],
+    "require": {
+        "docopt/docopt": "^1.0",
+        "guzzlehttp/guzzle": "^7.3"
+    }
+    ,
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "phpunit": "phpunit",
+        "test": "phpunit tests"
+    }
+}

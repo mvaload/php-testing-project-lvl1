@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+
+use GuzzleHttp\Exception\GuzzleException;
+use Hexlet\Code\PageLoader;
+
+$autoloadPath = __DIR__ . '/../vendor/autoload.php';
+
+if (file_exists($autoloadPath)) {
+    require_once $autoloadPath;
+}
+
+$dir = __DIR__ . '/../src/';
+
+define("DOC", <<<DOC
+Page loader
+Downloads page from URL and save it locally                                                              
+                                                                                                         
+Usage:                                                                                                   
+    page-loader (-h|--help)                                                                              
+    page-loader [--output <dir>] <url>                                                                   
+    page-loader (-v|--version)                                                                           
+                                                                                                         
+Options:                                                                                                 
+  -h --help            display help for command                                                          
+  -v --version         output the version number                                                         
+  -o --output <dir>    output dir [default: {$dir}]
+DOC
+);
+
+$docopt = Docopt::handle(DOC);
+
+$client = new GuzzleHttp\Client();
+$pageLoader = new PageLoader($docopt->args['--output'], $docopt->args['<url>']);
+
+try {
+    echo $pageLoader->loader($client);
+} catch (GuzzleException $e) {
+    echo 'Caught GuzzleException: ', $e->getMessage(), "\n";
+} catch (Exception $e) {
+    echo 'Caught Exception: ', $e->getMessage(), "\n";
+}
