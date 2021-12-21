@@ -8,50 +8,32 @@ use Psr\Http\Client\ClientInterface;
 
 /**
  * Class PageLoader
+ * @package Hexlet\Code
  */
-class PageLoader
+class PageLoader extends Loader
 {
-    private string $url;
-    private string $fullPath;
-    private string $pathToDir;
-
-    public function __construct(string $path, string $url)
-    {
-        $this->pathToDir = $path;
-        $this->url = $url;
-    }
-
     /**
+     * @inheritdoc
      * @throws GuzzleException
-     * @throws Exception
      */
-    public function loader(ClientInterface $client): string
+    public function upload(ClientInterface $client): string
     {
-        $data = $client->get($this->url)->getBody()->getContents();
-        $urlComponents = $this->parserUrl($this->url);
-        $this->generateFullPathTofile($urlComponents);
-        $this->saveToFile($this->fullPath, $data);
-        return $this->fullPath;
-    }
-
-    public function parserUrl(string $url): array
-    {
-        return parse_url($url);
-    }
-
-    public function generateFullPathTofile(array $urlComponents): void
-    {
-        unset($urlComponents['scheme']);
-        $nameFile = str_replace(['.', '/'], ['-'], implode('-', $urlComponents));
-        $this->fullPath = $this->pathToDir . $nameFile . '.html';
+        $domainName = $this->getDomainName();
+        $response = $client->request('GET');
+        $content = $response->getBody()->getContents();
+        $pathToFile = $this->pathOut . $domainName . '.html';
+        $this->saveToFile($pathToFile, $content);
+        return $pathToFile;
     }
 
     /**
+     * @param string $path
+     * @param string $data
      * @throws Exception
      */
-    public function saveToFile(string $fullPath, string $data): void
+    private function saveToFile(string $path, string $data): void
     {
-        $result = file_put_contents($fullPath, $data);
+        $result = file_put_contents($path, $data);
         if ($result === false) {
             throw new Exception("Something went wrong");
         }

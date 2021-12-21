@@ -2,7 +2,7 @@
 <?php
 
 use GuzzleHttp\Exception\GuzzleException;
-use Hexlet\Code\PageLoader;
+use Hexlet\Code\CommonLoader;
 
 $autoloadPath = __DIR__ . '/../vendor/autoload.php';
 
@@ -10,7 +10,7 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
-$dir = __DIR__ . '/../src/';
+$dir = __DIR__ . '/../';
 
 define("DOC", <<<DOC
 Page loader
@@ -30,11 +30,11 @@ DOC
 
 $docopt = Docopt::handle(DOC);
 
-$client = new GuzzleHttp\Client();
-$pageLoader = new PageLoader($docopt->args['--output'], $docopt->args['<url>']);
+$client = new GuzzleHttp\Client(['base_uri' => $docopt->args['<url>']]);
 
 try {
-    echo $pageLoader->loader($client);
+    $result = (new CommonLoader($client, $docopt->args['--output'], $docopt->args['<url>']))->run();
+    echo $result . "\n";
 } catch (GuzzleException $e) {
     echo 'Caught GuzzleException: ', $e->getMessage(), "\n";
 } catch (Exception $e) {
