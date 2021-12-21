@@ -16,7 +16,8 @@
     ],
     "require": {
         "docopt/docopt": "^1.0",
-        "guzzlehttp/guzzle": "^7.3"
+        "guzzlehttp/guzzle": "^7.3",
+        "imangazaliev/didom": "^1.18"
     }
     ,
     "require-dev": {
